@@ -1,0 +1,947 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#09060a">
+<title>Для Ани — маленькая вселенная ♥</title>
+<style>
+:root{
+  --ink:#080509;--ink2:#140710;--wine:#481127;--wine2:#7a1d41;--crimson:#9e1b4a;--rose:#f2a7c3;
+  --rose-glow:#ff5c9d;--paper:#fff7fa;--white:#fff;--muted:#cbb2be;--gold:#e2be84;
+  --line:rgba(242,167,195,.22);--ease:cubic-bezier(.2,.8,.2,1);--bounce:cubic-bezier(.18,1.6,.4,1)
+}
+*{box-sizing:border-box}html{scroll-behavior:smooth;scroll-padding-top:24px;background:#080509;color-scheme:dark}
+body{
+  margin:0;min-height:100vh;color:var(--paper);font-family:ui-rounded,"Segoe UI",system-ui,-apple-system,sans-serif;
+  background:radial-gradient(ellipse at 12% 8%,rgba(130,24,66,.48),transparent 36%),radial-gradient(ellipse at 88% 82%,rgba(84,15,42,.45),transparent 40%),radial-gradient(ellipse at 50% 50%,rgba(32,9,20,.65),transparent 65%),linear-gradient(135deg,#060407 0%,#15060f 50%,#070508 100%);
+  overflow-x:hidden
+}
+body:before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;background:repeating-linear-gradient(125deg,transparent 0 95px,rgba(255,255,255,.011) 96px 97px);mask-image:linear-gradient(to bottom,black,transparent 94%)}
+button{font:inherit;cursor:pointer}button:focus-visible{outline:2px solid var(--rose);outline-offset:3px}
+
+/* Звёздный шлейф за пальцем/курсором */
+.trail-particle{position:fixed;pointer-events:none;z-index:9999;user-select:none;animation:trailFade .75s ease-out forwards;filter:drop-shadow(0 0 6px var(--rose-glow))}
+@keyframes trailFade{0%{opacity:1;transform:translate(-50%,-50%) scale(1) rotate(0deg)}100%{opacity:0;transform:translate(-50%,-50%) scale(.2) rotate(45deg) translateY(18px)}}
+
+.ambient{position:fixed;inset:0;overflow:hidden;pointer-events:none;z-index:0}.orb{position:absolute;border-radius:50%;filter:blur(3px);opacity:.18;animation:orbFloat 18s ease-in-out infinite alternate}
+.orb.one{width:290px;height:290px;left:-90px;top:18%;background:#a52454}.orb.two{width:360px;height:360px;right:-120px;top:52%;background:#6a1534;animation-delay:-7s}.orb.three{width:200px;height:200px;left:65%;top:-60px;background:#f3b4cb;opacity:.08;animation-delay:-4s}
+#particles{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:1}.particle{position:absolute;bottom:-50px;opacity:0;animation:rise var(--dur,12s) linear forwards;filter:drop-shadow(0 0 7px rgba(240,114,163,.6));user-select:none}
+.topline{position:fixed;top:0;left:0;height:3px;width:0;background:linear-gradient(90deg,var(--wine2),var(--rose),var(--gold));z-index:20;box-shadow:0 0 12px var(--crimson);transition:width .8s var(--ease)}
+.wrap{position:relative;z-index:2;width:min(1060px,100%);margin:auto;padding:20px 22px 38px;min-height:100vh;display:flex;flex-direction:column}
+
+.brandrow{display:flex;justify-content:space-between;align-items:center;gap:12px;color:#e8cfd9;font-size:11px;letter-spacing:.16em;text-transform:uppercase}
+.brand{display:flex;align-items:center;gap:9px}
+.brandmark{display:grid;place-items:center;width:32px;height:32px;border:1px solid rgba(242,167,195,.4);border-radius:50%;color:var(--rose);box-shadow:0 0 20px rgba(165,36,84,.28);transition:all .25s;cursor:pointer}
+.brandmark:hover{transform:scale(1.15);box-shadow:0 0 25px var(--rose-glow);border-color:#fff}
+.chapter{border:1px solid var(--line);padding:6px 12px;border-radius:999px;letter-spacing:.08em;background:rgba(255,255,255,.04)}
+
+/* Навигация */
+.site-nav{position:sticky;top:8px;z-index:18;width:max-content;max-width:100%;margin:12px auto 22px;background:rgba(18,7,14,.92);border:1px solid rgba(242,167,195,.28);border-radius:999px;padding:6px 8px;backdrop-filter:blur(24px);box-shadow:0 16px 48px rgba(0,0,0,.5);display:flex;flex-wrap:wrap;justify-content:center;gap:5px}
+.site-tab{border-radius:999px;color:#f0dfe6;padding:9px 15px;background:transparent;border:1px solid transparent;font-weight:650;transition:all .25s}
+.site-tab:hover,.site-tab.current{background:linear-gradient(135deg,#fff4f8,#f4dce6);color:#5d1532;box-shadow:0 4px 20px rgba(230,107,155,.24)}
+
+/* Секции */
+main{flex:1;display:block;padding:8px 0 24px}
+.scene{display:none;width:100%;min-height:510px;border-radius:30px;padding:clamp(24px,4.5vw,46px);position:relative;isolation:isolate;overflow:hidden;border:1px solid rgba(242,167,195,.26);background:linear-gradient(145deg,rgba(28,10,20,.94),rgba(14,6,11,.96) 55%,rgba(38,10,24,.92));box-shadow:0 28px 90px rgba(0,0,0,.46),inset 0 1px rgba(255,255,255,.08)}
+.scene.active{display:block;animation:sceneIn .55s var(--ease) both}
+.eyebrow{display:inline-flex;align-items:center;gap:9px;color:var(--rose);font-size:11px;letter-spacing:.2em;text-transform:uppercase}
+.eyebrow:before{content:"";width:22px;height:1px;background:var(--rose)}
+h1,h2,p{margin-top:0}h1{font-size:clamp(40px,7.5vw,76px);line-height:1.02;letter-spacing:-.05em;margin:18px 0 14px}h1 em,h2 em{font-style:normal;color:var(--rose);text-shadow:0 0 35px rgba(230,100,150,.35)}
+h2{font-size:clamp(28px,5vw,46px);letter-spacing:-.035em;line-height:1.08;margin:14px 0}.lead{max-width:620px;color:#e2ced7;line-height:1.8;font-size:clamp(15px,1.9vw,17px)}
+
+.card{border:1px solid rgba(242,167,195,.24);background:linear-gradient(145deg,rgba(44,14,29,.9),rgba(17,7,14,.96) 56%,rgba(58,15,34,.88));border-radius:24px;padding:clamp(22px,4vw,36px);box-shadow:0 22px 60px rgba(0,0,0,.35),inset 0 1px rgba(255,255,255,.07)}
+.btnrow{display:flex;gap:12px;flex-wrap:wrap;margin-top:24px}.btn{position:relative;overflow:hidden;border:1px solid rgba(242,167,195,.28);border-radius:999px;padding:13px 22px;color:#fff7fa;background:linear-gradient(135deg,rgba(255,255,255,.08),rgba(255,255,255,.025));transition:all .3s var(--ease)}
+.btn:hover{transform:translateY(-2px);border-color:var(--rose);box-shadow:0 10px 28px rgba(158,27,74,.3)}.btn.primary{background:linear-gradient(135deg,#6d1637,#a52454);border-color:#cf618b;box-shadow:0 10px 28px rgba(122,29,65,.35)}
+.btn.subtle{color:#e8d5de}
+
+/* 1. Счётчик времени знакомства */
+.history-counter{margin:18px 0 10px;padding:12px 22px;border-radius:18px;border:1px solid rgba(242,167,195,.28);background:linear-gradient(135deg,rgba(112,24,56,.32),rgba(15,6,12,.5));box-shadow:0 8px 30px rgba(0,0,0,.3),inset 0 0 25px rgba(242,167,195,.06);display:inline-flex;flex-direction:column;align-items:center;gap:6px}
+.history-label{font-size:11px;letter-spacing:.15em;text-transform:uppercase;color:var(--rose);display:flex;align-items:center;gap:6px}
+.history-units{display:flex;gap:14px;font-variant-numeric:tabular-nums;color:#fff;font-size:clamp(16px,3vw,22px);font-weight:750;text-shadow:0 0 15px rgba(242,167,195,.4)}
+.history-units span{display:flex;flex-direction:column;align-items:center;font-size:10px;font-weight:500;color:#c9abb8;margin-top:2px}
+
+/* Блокнот */
+.notebook-stage{width:min(350px,100%);min-height:235px;margin:12px auto 0;display:grid;place-items:center;position:relative}
+.notebook{position:relative;width:min(290px,78vw);height:230px;cursor:pointer;transform:rotate(-5deg) scale(.88);transform-style:preserve-3d;filter:drop-shadow(0 20px 25px rgba(0,0,0,.45));transition:transform .4s}
+.notebook-cover{position:absolute;inset:0;border-radius:14px 20px 20px 14px;background:linear-gradient(135deg,#f6edf0 0%,#c9aab5 35%,#7e2545 36%,#4b142b 100%);border:1px solid #e7c5d1;transform-origin:left;transition:transform 1s var(--ease)}
+.notebook-cover:after{content:"A";position:absolute;inset:0;display:grid;place-items:center;font:italic 80px Georgia,serif;color:#fff0f5}
+.notebook-spine{position:absolute;left:0;top:0;bottom:0;width:22px;border-radius:12px 0 0 12px;background:linear-gradient(90deg,#f8eaf0,#9e5a73,#4d142c)}
+.notebook-pages{position:absolute;inset:7px 4px 5px 18px;border-radius:5px 15px 15px 5px;background:repeating-linear-gradient(0deg,#fdf8f5 0 7px,#e7dce0 8px 9px)}
+.notebook-ribbon{position:absolute;right:34px;bottom:-13px;width:24px;height:78px;background:linear-gradient(90deg,#d6b47a,#f3dcae,#a77c42);clip-path:polygon(0 0,100% 0,100% 100%,50% 78%,0 100%)}
+.notebook-label{position:absolute;z-index:5;left:48px;right:28px;top:75px;text-align:center;color:#fff1f6;font:italic 22px Georgia,serif}
+.notebook.opened .notebook-cover{transform:rotateY(-145deg)}
+.paper-sheet{position:absolute;z-index:1;left:13%;top:10%;width:74%;height:78%;border-radius:6px;background:linear-gradient(115deg,#fffdfb,#f4e8ec);color:#68213b;box-shadow:0 8px 28px #0008;padding:20px;text-align:center;transform:scale(.92);opacity:0;display:flex;flex-direction:column;justify-content:center;gap:10px}
+.paper-sheet.falling{animation:paperFall 1.8s cubic-bezier(.18,.72,.25,1) forwards;pointer-events:auto}
+@keyframes paperFall{0%{opacity:0;transform:translateY(-65px) scale(.8)}22%{opacity:1}100%{opacity:1;transform:translateY(90px) scale(1)}}
+
+/* 3. Сургучный 3D-конверт для письма */
+.envelope-stage{min-height:360px;display:grid;place-items:center;perspective:1000px;margin-top:16px}
+.envelope{position:relative;width:min(340px,86vw);height:225px;transform-style:preserve-3d;transform:rotate(-3deg);filter:drop-shadow(0 25px 35px rgba(0,0,0,.6));cursor:pointer;transition:transform .4s}
+.envelope:hover{transform:rotate(0deg) scale(1.02)}
+.env-back{position:absolute;inset:0;border-radius:14px;background:linear-gradient(145deg,#3c0d20,#16060e);border:1px solid #731e3f}
+.env-paper{position:absolute;left:6%;right:6%;top:10%;height:80%;border-radius:8px;background:linear-gradient(145deg,#fffbfa,#f4e4ec);color:#4a1228;padding:20px 18px;box-shadow:0 6px 20px rgba(0,0,0,.35);transition:transform 1s var(--ease),opacity .5s;transform:translateY(0);display:flex;flex-direction:column;justify-content:center;text-align:center;overflow:hidden}
+.env-paper h4{margin:0 0 6px;color:#6d1838;font-size:17px;font-family:Georgia,serif}
+.env-paper p{margin:0;font-size:13px;line-height:1.6;color:#552839}
+.env-flap{position:absolute;inset:0;background:linear-gradient(140deg,#5a1532,#2e0918);clip-path:polygon(0 0,100% 0,50% 58%);transform-origin:top;transition:transform .85s var(--ease);z-index:3;border-radius:12px 12px 0 0}
+.env-front{position:absolute;inset:0;clip-path:polygon(0 0,50% 58%,100% 0,100% 100%,0 100%);background:linear-gradient(145deg,#4e112a,#220613);z-index:4;border-radius:12px;border:1px solid #7c2245}
+.wax-seal{position:absolute;z-index:5;left:50%;top:54%;transform:translate(-50%,-50%);width:56px;height:56px;border-radius:50%;display:grid;place-items:center;font:italic 26px Georgia,serif;color:#fceaf0;background:radial-gradient(circle at 35% 25%,#b82c59,#57132f 75%);border:2px solid #ea7ea6;box-shadow:0 4px 15px rgba(0,0,0,.6),0 0 20px rgba(220,50,110,.4);transition:all .5s var(--ease)}
+.envelope.open .env-flap{transform:rotateX(180deg);z-index:1}
+.envelope.open .env-paper{transform:translateY(-110px) scale(1.08);box-shadow:0 20px 45px rgba(0,0,0,.6);z-index:6}
+.envelope.open .wax-seal{opacity:0;transform:translate(-50%,-50%) scale(.3) rotate(45deg)}
+
+/* 4. Комета на звёздном небе */
+.shooting-star{position:absolute;width:120px;height:2px;background:linear-gradient(90deg,#fff,rgba(242,167,195,.8),transparent);transform:rotate(-35deg);filter:drop-shadow(0 0 8px #fff);opacity:0;pointer-events:none;z-index:5}
+.shooting-star.fly{animation:cometFly 1.2s cubic-bezier(.22,.8,.22,1) forwards}
+@keyframes cometFly{0%{opacity:0;transform:translate(0,0) rotate(-35deg) scaleX(.2)}30%{opacity:1}100%{opacity:0;transform:translate(420px,280px) rotate(-35deg) scaleX(1.4)}}
+
+/* 5. Баночка тёплых мыслей */
+.jar-box{margin-top:28px;padding:22px;border-radius:22px;border:1px dashed rgba(242,167,195,.35);background:linear-gradient(135deg,rgba(56,14,35,.4),rgba(15,6,12,.6));display:flex;flex-direction:column;align-items:center;text-align:center;gap:12px}
+.scroll-note{min-height:54px;display:grid;place-items:center;padding:12px 18px;border-radius:14px;background:linear-gradient(135deg,#fff8fb,#f6deea);color:#56142e;font-size:14px;font-weight:600;line-height:1.6;border:1px solid #dcaabf;box-shadow:0 8px 24px rgba(0,0,0,.3);transition:all .35s var(--ease);transform-origin:center;opacity:0;transform:scale(.92) translateY(6px)}
+.scroll-note.show{opacity:1;transform:scale(1) translateY(0);animation:notePop .4s var(--bounce)}
+@keyframes notePop{0%{transform:scale(.85) rotate(-2deg)}60%{transform:scale(1.04) rotate(1deg)}100%{transform:scale(1) rotate(0)}}
+
+/* 6. Виртуальное объятие */
+.hug-overlay{position:fixed;inset:0;background:radial-gradient(circle at center,rgba(255,92,157,.45),rgba(20,4,13,.95));z-index:9000;opacity:0;pointer-events:none;transition:opacity .5s;display:grid;place-items:center}
+.hug-overlay.active{opacity:1;pointer-events:auto}
+.hug-card{text-align:center;padding:32px 26px;border-radius:28px;background:linear-gradient(145deg,rgba(48,13,31,.95),rgba(16,6,13,.98));border:1px solid var(--rose);box-shadow:0 0 60px rgba(235,64,129,.5);max-width:400px;animation:hugPulse 1.8s ease-in-out infinite alternate}
+@keyframes hugPulse{from{transform:scale(.98)}to{transform:scale(1.03)}}
+
+/* 9. Чёрно-красная распускающаяся роза */
+.rose-stage{min-height:220px;display:grid;place-items:center;margin:16px auto;cursor:pointer}
+.rose-svg{width:160px;height:160px;filter:drop-shadow(0 10px 25px rgba(220,30,85,.4));transition:transform .4s var(--ease)}
+.rose-svg:hover{transform:scale(1.08)}
+.rose-petal{transform-origin:center;transition:all 1.1s cubic-bezier(.16,1,.3,1)}
+.rose-svg.bloomed .petal-outer{transform:scale(1.22) rotate(12deg)}
+.rose-svg.bloomed .petal-mid{transform:scale(1.15) rotate(-16deg)}
+.rose-svg.bloomed .petal-core{transform:scale(1.08);filter:drop-shadow(0 0 16px #ff387f)}
+
+/* Музыка и караоке */
+.music-layout{display:grid;grid-template-columns:minmax(220px,.8fr) minmax(0,1.2fr);gap:clamp(22px,4vw,48px);align-items:stretch;margin-top:24px}
+.music-art{position:relative;min-height:300px;display:grid;place-items:center;border-radius:26px;background:radial-gradient(circle,rgba(142,41,75,.2),transparent 68%);border:1px solid rgba(245,177,202,.25);overflow:hidden}
+.music-art:before{content:"";position:absolute;width:230px;height:230px;border-radius:50%;background:radial-gradient(circle,rgba(235,64,129,.35),transparent 70%);filter:blur(30px);opacity:0;transition:opacity .5s}
+.music-art.playing:before{opacity:1;animation:bassHalo 2s ease-in-out infinite alternate}
+@keyframes bassHalo{0%{transform:scale(0.85);opacity:.35}100%{transform:scale(1.3);opacity:.9}}
+
+.music-disc{position:relative;z-index:1;width:min(210px,62vw);aspect-ratio:1;border-radius:50%;display:grid;place-items:center;background:repeating-radial-gradient(circle,#17090e 0 2px,#35101f 3px 5px,#16080e 6px 8px);box-shadow:0 18px 45px rgba(0,0,0,.5),0 0 60px rgba(175,34,83,.25);animation:spinDisc 8s linear infinite paused}
+.music-disc.playing{animation-play-state:running}
+.disc-label{width:74px;height:74px;border-radius:50%;display:grid;place-content:center;text-align:center;background:linear-gradient(145deg,#fff8fb,#c48da2);color:#621c38;font:italic 26px Georgia,serif;box-shadow:0 0 0 5px #270b18,0 0 0 6px #c78ca2}
+.equalizer{position:absolute;bottom:20px;display:flex;align-items:center;gap:5px;height:24px}
+.equalizer i{width:3px;height:5px;border-radius:5px;background:#f0a1bd;opacity:.45}
+.equalizer.playing i{animation:equalize .65s ease-in-out infinite alternate}
+.equalizer i:nth-child(2n){animation-delay:-.3s}.equalizer i:nth-child(3n){animation-delay:-.5s}
+@keyframes spinDisc{to{transform:rotate(360deg)}}@keyframes equalize{from{height:4px;opacity:.4}to{height:22px;opacity:1}}
+
+.music-panel{border-radius:26px;padding:clamp(20px,3vw,32px)}
+.music-artist{color:#e5bfce;margin:4px 0 14px}
+#songAudio{width:100%;margin:10px 0 8px;accent-color:#b93469;filter:invert(1) hue-rotate(280deg) saturate(.75);border-radius:14px}
+.song-progress{margin:6px 0 16px}
+.song-progress-meta{display:flex;justify-content:space-between;color:#e1c4d0;font-size:11px;font-variant-numeric:tabular-nums;margin-bottom:6px}
+.song-progress-track{height:6px;background:rgba(255,255,255,.14);border-radius:99px;overflow:hidden;position:relative;cursor:pointer}
+.song-progress-track span{display:block;width:0;height:100%;border-radius:inherit;background:linear-gradient(90deg,#9e2652,#f0729f 70%,#ffffff 100%);box-shadow:0 0 16px #ff4d8b;transition:width .08s linear}
+.lyric-head{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin:18px 0 12px}
+.sync-pill{font-size:11px;color:#ffeaf1;background:rgba(157,35,77,.35);border:1px solid rgba(246,174,198,.35);border-radius:999px;padding:5px 12px;font-weight:600}
+
+.karaoke{position:relative;min-height:240px;border-radius:24px;padding:28px 18px;background:radial-gradient(ellipse at 50% 0%,rgba(145,31,74,.48),transparent 70%),linear-gradient(145deg,#1b0a13,#090509 65%,#260b18);border:1px solid rgba(242,151,184,.38);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:14px;overflow:hidden;box-shadow:inset 0 1px 0 rgba(255,255,255,.12),0 20px 45px rgba(0,0,0,.45)}
+.lyric-prev,.lyric-next{font-size:clamp(13px,1.8vw,16px);color:#9b7a8a;line-height:1.5;transition:all .32s cubic-bezier(.2,.8,.2,1);cursor:pointer;padding:4px 10px;border-radius:8px;max-width:92%}
+.lyric-prev:hover,.lyric-next:hover{color:#fff;background:rgba(255,255,255,.05)}
+.lyric-prev{transform:translateY(-2px);opacity:.65;filter:blur(0.2px)}.lyric-next{transform:translateY(2px);opacity:.6}
+
+.lyric-current{font-size:clamp(22px,3.8vw,36px);font-weight:850;line-height:1.45;color:#fff;width:100%;text-wrap:balance;padding:4px 8px;cursor:pointer}
+.lyric-current.changing{animation:kineticLineSlide .3s cubic-bezier(.16,1,.3,1)}
+@keyframes kineticLineSlide{0%{opacity:0.25;transform:translateY(12px) scale(0.96);filter:blur(4px)}100%{opacity:1;transform:translateY(0) scale(1);filter:blur(0)}}
+
+.lyric-word{display:inline-block;margin:0 .12em .08em 0;padding:.04em .12em;border-radius:.3em;color:#9a7988;cursor:pointer;transition:color .06s linear,background .06s linear,transform .08s cubic-bezier(.18,1.6,.4,1)}
+.lyric-word:hover{color:#fff}.lyric-word.done{color:#f0b8ce;opacity:.85}
+.lyric-word.active{color:#fff!important;background:linear-gradient(135deg,#9e1b53,#ea347a)!important;box-shadow:0 0 24px rgba(234,52,122,.85),0 2px 10px rgba(0,0,0,.6)!important;transform:translateY(-3px) scale(1.12)!important;text-shadow:0 0 14px rgba(255,255,255,.9)!important;animation:wordPulse .28s ease-out forwards}
+@keyframes wordPulse{0%{transform:translateY(0) scale(0.96)}40%{transform:translateY(-4px) scale(1.16)}100%{transform:translateY(-2px) scale(1.1)}}
+
+.lyrics-transport{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:16px}
+.timing-note{font-size:11px;color:#d8b7c5;line-height:1.6;flex-basis:100%}
+.offset-pill{font-size:11px;color:#f0dfe6;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.15);border-radius:999px;padding:4px 10px;cursor:pointer;transition:all .2s}
+.offset-pill:hover{background:rgba(255,255,255,.2);color:#fff}
+
+/* 10. Секретное модальное окно пасхалки */
+.secret-modal{position:fixed;inset:0;background:rgba(8,3,7,.85);z-index:9500;backdrop-filter:blur(10px);display:none;place-items:center;padding:20px}
+.secret-modal.show{display:grid}
+.secret-content{background:linear-gradient(145deg,#2f0d1e,#11050c);border:2px solid var(--rose);border-radius:28px;padding:32px 26px;max-width:440px;text-align:center;box-shadow:0 0 60px rgba(220,40,95,.4);animation:notePop .4s var(--bounce)}
+
+@media(max-width:720px){
+  .wrap{padding:16px 14px 24px}
+  .site-nav{width:100%;border-radius:18px}
+  .site-tab{font-size:12px;padding:8px 10px;flex:1 1 auto}
+  .music-layout{grid-template-columns:1fr}
+  .music-art{min-height:220px}
+  .music-disc{width:170px}
+  .karaoke{min-height:200px;padding:22px 14px}
+  .lyric-current{font-size:22px}
+  .history-units{gap:8px;font-size:16px}
+}
+</style>
+</head>
+<body>
+<div class="topline" id="topline"></div>
+<div class="ambient"><i class="orb one"></i><i class="orb two"></i><i class="orb three"></i></div>
+<div id="particles" aria-hidden="true"></div>
+<div class="transition-flash" id="flash"></div>
+
+<div class="wrap">
+<header class="brandrow">
+  <div class="brand">
+    <span class="brandmark" id="secretHeart" title="Нажми 5 раз ♥">♥</span>
+    <span>маленькая вселенная</span>
+  </div>
+  <span class="chapter" id="chapter">личный подарок для Ани</span>
+</header>
+
+<nav class="site-nav" id="siteNav" aria-label="Разделы сайта">
+  <button class="site-tab current" data-target="home">⌂ Главная</button>
+  <button class="site-tab" data-target="letter">✉ Письмо</button>
+  <button class="site-tab" data-target="stars">✦ Созвездие</button>
+  <button class="site-tab" data-target="gift">♧ Шкатулка</button>
+  <button class="site-tab" data-target="music">♫ Музыка</button>
+  <button class="site-tab" data-target="final">♥ Финал</button>
+</nav>
+
+<main>
+<!-- Главная -->
+<section class="scene active" id="home" data-scene="0" aria-label="Главная">
+  <div style="display:flex;flex-direction:column;align-items:center;text-align:center;">
+    <span class="eyebrow">маленький подарок · только для тебя</span>
+    <h1 style="margin:16px 0 10px;">Аня, ты — <em>очень классная</em> ♥</h1>
+    <p class="lead">Я сделал для тебя кое-что маленькое, но от души. Просто напоминание о том, что ты замечательная и я очень рад, что однажды мы познакомились.</p>
+    
+    <!-- 1. Счётчик времени знакомства -->
+    <div class="history-counter" id="historyCounter">
+      <span class="history-label">✦ Мы знакомы уже ✦</span>
+      <div class="history-units">
+        <div><span id="cntDays">0</span><span>дней</span></div>:
+        <div><span id="cntHours">0</span><span>часов</span></div>:
+        <div><span id="cntMinutes">0</span><span>минут</span></div>:
+        <div><span id="cntSeconds">0</span><span>секунд</span></div>
+      </div>
+    </div>
+
+    <div class="notebook-stage">
+      <div class="notebook" id="notebook" role="button" tabindex="0" aria-label="Открыть блокнот">
+        <div class="notebook-pages"></div>
+        <div class="notebook-cover"></div>
+        <div class="notebook-spine"></div>
+        <div class="notebook-label">для Ани ♥</div>
+        <div class="notebook-ribbon"></div>
+        <div class="paper-sheet" id="fallingPaper"><b>Анечка, привет ♥</b><span>Я кое-что для тебя приготовил.<br>Открывай страницу за страницей.</span></div>
+      </div>
+    </div>
+    <p style="color:#d8b7c5;font-size:12px;margin-top:14px;" id="notebookHint">нажми на блокнот, чтобы открыть ✦</p>
+
+    <!-- 6. Кнопка «Виртуальное объятие» -->
+    <div style="margin-top:16px;">
+      <button class="btn primary" id="hugBtn" type="button" style="font-size:13px;padding:11px 20px;">🫂 Отправить виртуальное объятие</button>
+    </div>
+  </div>
+</section>
+
+<!-- Письмо -->
+<section class="scene" id="letter" data-scene="1" aria-label="Письмо">
+  <div class="eyebrow">часть первая · письмо</div>
+  <h2>Сначала — несколько<br><em style="color:var(--rose);font-style:normal">слов от меня.</em></h2>
+  <p class="lead">Нажми на сургучную печать, чтобы распечатать послание.</p>
+
+  <!-- 3. Сургучный 3D-конверт -->
+  <div class="envelope-stage">
+    <div class="envelope" id="envelopeCard" role="button" tabindex="0" aria-label="Открыть конверт">
+      <div class="env-back"></div>
+      <div class="env-paper">
+        <h4>Анечка, привет ♥</h4>
+        <p>Ты правда невероятно крутая девочка. Мне хочется, чтобы ты почаще улыбалась и помнила, сколько в тебе светлого и классного. Ты заслуживаешь самого искреннего счастья и тепла!</p>
+      </div>
+      <div class="env-flap"></div>
+      <div class="env-front"></div>
+      <div class="wax-seal">А</div>
+    </div>
+  </div>
+
+  <div class="btnrow" style="margin-top:30px;justify-content:center;"><button class="btn primary" id="unlockStars">Перейти к созвездию ✦</button></div>
+</section>
+
+<!-- Созвездие -->
+<section class="scene" id="stars" data-scene="2" aria-label="Созвездие">
+  <div class="eyebrow">часть вторая · наша вселенная</div>
+  <h2>Некоторые встречи<br>становятся <em style="color:var(--rose);font-style:normal">звёздами.</em></h2>
+  <p class="lead">Найди и нажми на 7 мерцающих звёзд. Каждая добавит кусочек света в общее созвездие.</p>
+  <div class="card constellation-card" style="position:relative;">
+    <div class="shooting-star" id="comet"></div>
+    <canvas id="sky" aria-label="Интерактивное звёздное небо"></canvas>
+    <p class="sky-instruction" id="skyInstruction">Найди светящиеся точки — они ждут твоего нажатия.</p>
+    <div class="star-message" id="starMessage">«Иногда один человек просто делает мир чуточку теплее»</div>
+    <div class="progressdots" id="progressdots"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+  </div>
+  <div class="btnrow">
+    <!-- 4. Кнопка падающей кометы -->
+    <button class="btn subtle" id="launchComet" type="button">✨ Загадать желание (комета)</button>
+    <button class="btn primary" id="toGift" disabled>Открыть шкатулку ✧</button>
+    <button class="btn subtle" id="resetStars">Заново</button>
+  </div>
+</section>
+
+<!-- Шкатулка -->
+<section class="scene" id="gift-section" data-scene="3" aria-label="Шкатулка">
+  <div class="eyebrow">часть третья · маленький секрет</div>
+  <div class="box-scene">
+    <div class="gift-stage"><div class="gift" id="gift" role="button" tabindex="0" aria-label="Открыть шкатулку"><div class="gift-base"></div><div class="gift-lid"></div><div class="gift-bow"></div><div class="gift-knot"></div></div><div class="gift-glow"></div></div>
+    <div class="gift-copy">
+      <h2>Внутри есть кое-что<br><em style="color:var(--rose);font-style:normal">особенное.</em></h2>
+      <p>В ней спрятано послание — оно появится, когда ты решишь её открыть.</p>
+      <button class="btn primary" id="openGift">Открыть шкатулку ♥</button>
+      <div class="reveal" id="giftReveal">Анечка, пусть у тебя будет побольше моментов, когда ты искренне счастлива. Не забывай радовать себя, верить в свои силы и оставаться собой. Ты заслуживаешь всего самого хорошего! ✨</div>
+    </div>
+  </div>
+
+  <!-- 9. Чёрно-красная распускающаяся роза -->
+  <div style="margin-top:36px;text-align:center;">
+    <span class="eyebrow" style="justify-content:center;">особенный цветок</span>
+    <h3 style="margin:8px 0 4px;font-size:22px;">Червонная роза для тебя</h3>
+    <p style="font-size:13px;color:#c9abb8;margin:0;">нажми на бутон, чтобы он распустился 🌹</p>
+    <div class="rose-stage" id="roseTrigger" title="Нажми, чтобы роза распустилась">
+      <svg class="rose-svg" id="roseSvg" viewBox="0 0 100 100">
+        <!-- Внешние лепестки (тёмно-бордовый / бархатный чёрный) -->
+        <path class="rose-petal petal-outer" d="M50 20 C30 10, 10 35, 25 60 C35 75, 65 75, 75 60 C90 35, 70 10, 50 20 Z" fill="#260613" stroke="#841c3e" stroke-width="1.5"/>
+        <!-- Средние лепестки (рубиновый градиент) -->
+        <path class="rose-petal petal-mid" d="M50 30 C38 20, 22 42, 34 60 C42 70, 58 70, 66 60 C78 42, 62 20, 50 30 Z" fill="#691230" stroke="#ba2d5b" stroke-width="1.5"/>
+        <!-- Бутон / Сердцевина -->
+        <path class="rose-petal petal-core" d="M50 38 C44 32, 34 44, 42 54 C46 60, 54 60, 58 54 C66 44, 56 32, 50 38 Z" fill="#b81e52" stroke="#ffa3c4" stroke-width="1.8"/>
+        <!-- Стебель -->
+        <path d="M50 75 Q48 88 52 98" stroke="#1d4d29" stroke-width="3" fill="none" stroke-linecap="round"/>
+        <path d="M50 82 Q38 80 42 86 Q48 85 50 82" fill="#1b4625"/>
+      </svg>
+    </div>
+  </div>
+
+  <!-- 5. Баночка тёплых мыслей -->
+  <div class="jar-box">
+    <span class="eyebrow">баночка добрых мыслей</span>
+    <h3 style="margin:0;font-size:20px;">Вытяни записку на сегодня ✨</h3>
+    <button class="btn subtle" id="drawNote" type="button" style="padding:9px 18px;font-size:12px;">✦ Достать записку из баночки</button>
+    <div class="scroll-note" id="scrollNote">«Твоя улыбка способна осветить даже самый хмурый день.»</div>
+  </div>
+
+  <div class="btnrow" style="margin-top:28px;justify-content:center;"><button class="btn primary" id="toFinal" disabled>Перейти в музыкальный раздел ♫</button></div>
+</section>
+
+<!-- Музыка -->
+<section class="scene" id="music" data-scene="4" aria-label="Любимая песня Ани">
+  <div class="eyebrow">отдельный музыкальный уголок</div>
+  <h2>Твоя любимая песня<br><em style="color:var(--rose);font-style:normal">♫ «Настя»</em></h2>
+  <p class="lead">Кишлак · живой кинетический плеер слово в слово.</p>
+  <div class="music-layout">
+    <div class="music-art" id="musicArt">
+      <div class="music-disc" id="musicDisc"><div class="disc-label">К<br><small>НАСТЯ</small></div></div>
+      <div class="equalizer" id="equalizer" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+    </div>
+    <div class="music-panel">
+      <span class="smallcap" style="font-size:11px;letter-spacing:.15em;color:#e7c4d2;">СЕЙЧАС ИГРАЕТ</span>
+      <h3 style="margin:8px 0 2px;">Настя <span>♥</span></h3>
+      <p class="music-artist">Кишлак</p>
+      <audio id="songAudio" controls preload="metadata"><source src="./song.mp3" type="audio/mpeg">Твой браузер не поддерживает аудио.</audio>
+      <div class="song-progress" aria-label="Прогресс песни">
+        <div class="song-progress-meta"><span id="songElapsed">0:00</span><span id="songDuration">1:54</span></div>
+        <div class="song-progress-track" id="progressTrack"><span id="songProgressFill"></span></div>
+      </div>
+      <div class="lyric-head">
+        <span class="smallcap" style="font-size:11px;letter-spacing:.12em;color:#e7c4d2;">ЖИВОЕ КАРАОКЕ</span>
+        <span class="sync-pill" id="syncStatus">нажми на строку для перемотки</span>
+      </div>
+      <div class="karaoke" id="karaoke" aria-live="polite">
+        <div class="lyric-prev" id="lyricPrev" title="Перемотать сюда">♫</div>
+        <div class="lyric-current" id="lyricCurrent" title="Текущая строка">Нажми «Включить песню» ♥</div>
+        <div class="lyric-next" id="lyricNext" title="Перемотать сюда">11:11, 11:11</div>
+      </div>
+      <div class="lyrics-transport">
+        <button class="btn primary" id="karaokePlay" type="button">▶ Включить песню</button>
+        <button class="btn subtle" id="karaokeRestart" type="button">↺ С начала</button>
+        <button class="offset-pill" id="offsetMinus" type="button">Раньше (-0.05с)</button>
+        <button class="offset-pill" id="offsetPlus" type="button">Позже (+0.05с)</button>
+        <button class="offset-pill" id="offsetReset" type="button">0.00с</button>
+        <span class="timing-note" id="offsetStatus">Калибровка: 0.00с (чистый ритм слово в слово)</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Финал -->
+<section class="scene" id="final" data-scene="5" aria-label="Финал">
+  <div class="finale">
+    <div class="final-heart">♥</div>
+    <span class="eyebrow">и последнее, самое главное</span>
+    <h2>Пусть у тебя<br>будет <em style="color:var(--rose);font-style:normal">много света.</em></h2>
+    <p class="finalwords">Аня, спасибо, что ты есть. Надеюсь, эта маленькая история подарила тебе хотя бы одну улыбку. Если вдруг однажды день будет не очень, пусть эти слова напомнят тебе: ты замечательная, и хорошего впереди ещё много.</p>
+    <p style="color:var(--rose);font-family:Georgia,serif;font-size:22px">Береги свою улыбку. ♥</p>
+    <span class="final-credit">сделано специально для @Anmar1aa · от @social_disorders</span>
+    <div class="btnrow" style="justify-content:center;margin-top:24px;"><button class="btn primary" id="restart">Пройти историю ещё раз ↻</button></div>
+  </div>
+</section>
+</main>
+
+<footer><span>небольшая история · только для Ани</span><span>сделано с ♥ и вниманием к мелочам</span></footer>
+</div>
+
+<!-- Модальное окно виртуального объятия -->
+<div class="hug-overlay" id="hugOverlay">
+  <div class="hug-card">
+    <div style="font-size:52px;margin-bottom:10px;">🫂</div>
+    <h3 style="color:#fff;margin:0 0 10px;font-size:24px;">Тепло доставлено!</h3>
+    <p style="color:#f2cee0;line-height:1.7;margin:0 0 18px;">Крепко обнял тебя через экран. Где бы ты сейчас ни была — помни, что ты не одна и всё обязательно будет хорошо ♥</p>
+    <button class="btn primary" id="closeHug" type="button">Спасибо ♥</button>
+  </div>
+</div>
+
+<!-- Модальное окно секретной пасхалки -->
+<div class="secret-modal" id="secretModal">
+  <div class="secret-content">
+    <div style="font-size:46px;margin-bottom:8px;">✨ 🤫 ✨</div>
+    <h3 style="color:#fff;font-size:24px;margin:0 0 10px;">Секретная записка найдена!</h3>
+    <p style="color:#ebd4df;line-height:1.7;margin:0 0 20px;">Ты нашла секрет! Знай: ты делаешь этот мир чуточку светлее и уютнее просто тем, что ты в нём есть. Спасибо тебе за то, какая ты. Никогда не сомневайся в себе! 💗</p>
+    <button class="btn primary" id="closeSecret" type="button">Закрыть секрет ✦</button>
+  </div>
+</div>
+
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+(()=>{'use strict';
+const $=id=>document.getElementById(id);
+const toast=$('toast');
+function showToast(t){toast.textContent=t;toast.classList.add('show');clearTimeout(showToast.timer);showToast.timer=setTimeout(()=>toast.classList.remove('show'),2300)}
+
+// ==========================================
+// 1. ШЛЕЙФ ЗВЁЗДНОЙ ПЫЛИ ЗА ПАЛЬЦЕМ/КУРСОРОМ
+// ==========================================
+const trailSymbols=['✦','✧','⋆','♡'];
+let lastTrailTime = 0;
+function spawnTrail(x, y){
+  const now = performance.now();
+  if(now - lastTrailTime < 38) return; // троттлинг для производительности
+  lastTrailTime = now;
+  const p = document.createElement('span');
+  p.className = 'trail-particle';
+  p.textContent = trailSymbols[Math.floor(Math.random()*trailSymbols.length)];
+  p.style.left = x + 'px';
+  p.style.top = y + 'px';
+  p.style.fontSize = (11 + Math.random()*12) + 'px';
+  p.style.color = Math.random() > 0.4 ? '#ff7cb2' : '#ffd38d';
+  document.body.appendChild(p);
+  setTimeout(()=>p.remove(), 750);
+}
+window.addEventListener('pointermove', e=>spawnTrail(e.clientX, e.clientY));
+window.addEventListener('touchmove', e=>{
+  if(e.touches && e.touches[0]) spawnTrail(e.touches[0].clientX, e.touches[0].clientY);
+}, {passive:true});
+
+// ==========================================
+// 2. СЧЁТЧИК ЗНАКОМСТВА (27 СЕНТЯБРЯ 2023)
+// ==========================================
+const startDate = new Date('2023-09-27T00:00:00');
+function updateHistoryCounter(){
+  const now = new Date();
+  const diff = Math.max(0, now - startDate);
+  const sec = Math.floor(diff / 1000) % 60;
+  const min = Math.floor(diff / (1000 * 60)) % 60;
+  const hrs = Math.floor(diff / (1000 * 60 * 60)) % 24;
+  const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+  $('cntDays').textContent = days;
+  $('cntHours').textContent = String(hrs).padStart(2,'0');
+  $('cntMinutes').textContent = String(min).padStart(2,'0');
+  $('cntSeconds').textContent = String(sec).padStart(2,'0');
+}
+setInterval(updateHistoryCounter, 1000);
+updateHistoryCounter();
+
+// ==========================================
+// НАВИГАЦИЯ И ПЕРЕХОДЫ
+// ==========================================
+const sections={home:$('home'),letter:$('letter'),stars:$('stars'),gift:$('gift-section'),music:$('music'),final:$('final')};
+const tabButtons=[...document.querySelectorAll('.site-tab')];
+
+function scrollToSection(id){
+  if(!sections[id])return;
+  Object.entries(sections).forEach(([key,section])=>section.classList.toggle('active',key===id));
+  tabButtons.forEach(b=>b.classList.toggle('current',b.dataset.target===id));
+  const flash=$('flash');
+  if(flash){flash.classList.remove('go');void flash.offsetWidth;flash.classList.add('go');}
+  window.scrollTo({top:0,behavior:'smooth'});
+  if(id==='stars')setTimeout(resizeSky,180);
+  if(id==='music')setTimeout(renderLyric,120);
+}
+tabButtons.forEach(b=>b.addEventListener('click',()=>scrollToSection(b.dataset.target)));
+
+function unlock(id){
+  scrollToSection(id);
+  showToast(({letter:'Письмо открыто ♥',stars:'Созвездие ждёт тебя ✦',gift:'Загляни в шкатулку ♡',music:'Включай любимую песню ♫',final:'Для тебя — последние тёплые слова ♥'})[id]||'Раздел открыт');
+}
+
+// 3. Блокнот
+const notebook=$('notebook'),paper=$('fallingPaper'),hint=$('notebookHint');let notebookOpened=false;
+function openNotebook(){
+  if(notebookOpened)return;notebookOpened=true;
+  notebook.classList.add('opened');paper.classList.add('falling');
+  hint.textContent='листочек нашёлся… ♥';
+  for(let i=0;i<12;i++)setTimeout(spawnParticle,i*70);
+  setTimeout(()=>{hint.textContent='все разделы доступны сверху — выбирай любой ♥';},1550);
+}
+notebook.addEventListener('click',openNotebook);
+notebook.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();openNotebook()}});
+$('unlockStars').addEventListener('click',()=>unlock('stars'));
+
+// 3. Сургучный конверт
+const envelopeCard=$('envelopeCard');
+envelopeCard.addEventListener('click', ()=>{
+  envelopeCard.classList.toggle('open');
+  if(envelopeCard.classList.contains('open')){
+    showToast('Сургучная печать сломана ♥');
+    for(let i=0;i<14;i++)setTimeout(spawnParticle,i*40);
+  }
+});
+
+// Частицы фона
+const particleHost=$('particles');const symbols=['♡','✦','✧','♥','❀','✿','୨୧','✉','☾','⋆','❦'];
+function spawnParticle(){
+  if(document.hidden)return;const e=document.createElement('span');e.className='particle';
+  e.textContent=symbols[Math.floor(Math.random()*symbols.length)];
+  e.style.left=(Math.random()*100)+'%';e.style.fontSize=(10+Math.random()*18)+'px';
+  e.style.setProperty('--dur',(10+Math.random()*14)+'s');e.style.setProperty('--drift',(-80+Math.random()*160)+'px');
+  e.style.setProperty('--rot',(-240+Math.random()*480)+'deg');e.style.setProperty('--op',(0.16+Math.random()*.32).toFixed(2));
+  e.style.color=Math.random()>.55?'#ff7cb2':(Math.random()>.5?'#fff4f7':'#d7b77d');
+  particleHost.appendChild(e);setTimeout(()=>e.remove(),25000);
+}
+for(let i=0;i<11;i++)setTimeout(spawnParticle,i*420);setInterval(spawnParticle,1250);
+
+// Созвездие
+const canvas=$('sky'),ctx=canvas.getContext('2d');
+const messages=['Ты заслуживаешь добрых слов.','Твоя улыбка важнее, чем кажется.','Пусть хороших моментов будет больше.','Не забывай, сколько в тебе классного.','Ты можешь быть собой — этого достаточно.','Пусть рядом будут искренние люди.','И пусть эта маленькая история тебя порадует.'];
+let stars=[],found=new Set(),skyW=0,skyH=0;
+function resizeSky(){
+  const rect=canvas.getBoundingClientRect();if(!rect.width)return;
+  const dpr=Math.min(window.devicePixelRatio||1,2);
+  skyW=rect.width;skyH=rect.height;canvas.width=Math.round(skyW*dpr);canvas.height=Math.round(skyH*dpr);
+  ctx.setTransform(dpr,0,0,dpr,0,0);
+  const pts=[[.50,.16],[.34,.30],[.22,.48],[.34,.68],[.50,.82],[.66,.68],[.78,.48]];
+  stars=pts.map((p,i)=>({x:p[0]*skyW,y:p[1]*skyH,r:i===0?5:4,phase:Math.random()*6.28}));
+  drawSky();
+}
+function drawSky(){
+  if(!ctx||!skyW)return;ctx.clearRect(0,0,skyW,skyH);
+  const grad=ctx.createRadialGradient(skyW*.5,skyH*.5,5,skyW*.5,skyH*.5,skyW*.6);
+  grad.addColorStop(0,'rgba(201,91,132,.34)');grad.addColorStop(1,'rgba(10,3,8,.10)');
+  ctx.fillStyle=grad;ctx.fillRect(0,0,skyW,skyH);
+  for(let i=0;i<70;i++){
+    const x=i*97.31%skyW,y=i*57.7%skyH;
+    ctx.fillStyle='rgba(255,238,245,'+(.12+(Math.sin(performance.now()*.001+i)*.12+.12))+')';
+    ctx.beginPath();ctx.arc(x,y,(i%3+1)*.35,0,Math.PI*2);ctx.fill();
+  }
+  ctx.lineWidth=1.4;ctx.strokeStyle='rgba(255,171,202,.92)';ctx.beginPath();let started=false;
+  stars.forEach((s,i)=>{if(found.has(i)){if(!started){ctx.moveTo(s.x,s.y);started=true}else ctx.lineTo(s.x,s.y)}});ctx.stroke();
+  stars.forEach((s,i)=>{
+    const pulse=(Math.sin(performance.now()*.002+s.phase)+1)/2;
+    ctx.beginPath();ctx.fillStyle=found.has(i)?'#fff8fc':'rgba(255,190,214,'+(.72+pulse*.28)+')';
+    ctx.shadowBlur=found.has(i)?22:8+pulse*8;ctx.shadowColor='#ff8db5';
+    ctx.arc(s.x,s.y,s.r+pulse*1.5,0,Math.PI*2);ctx.fill();ctx.shadowBlur=0;
+  });
+  requestAnimationFrame(drawSky);
+}
+function handleStar(e){
+  const r=canvas.getBoundingClientRect(),x=e.clientX-r.left,y=e.clientY-r.top;
+  let best=-1,dist=Infinity;
+  stars.forEach((s,i)=>{const d=Math.hypot(s.x-x,s.y-y);if(d<dist){dist=d;best=i}});
+  if(best<0||dist>32)return;
+  if(found.has(best)){showToast('Эта звёздочка уже зажглась ✦');return}
+  found.add(best);
+  document.querySelectorAll('#progressdots i')[found.size-1].classList.add('done');
+  $('starMessage').textContent='«'+messages[found.size-1]+'»';
+  $('skyInstruction').textContent='Зажглось '+found.size+' из 7 звёзд';
+  if(found.size>=7){
+    $('toGift').disabled=false;
+    $('skyInstruction').textContent='Созвездие собрано — следующая страница ждёт тебя ♥';
+    $('starMessage').textContent='«27 сентября 2023 — дата, с которой началась ваша история. Пусть впереди будет ещё много хорошего.»';
+    showToast('Созвездие собрано ✨');
+  }
+}
+canvas.addEventListener('pointerdown',handleStar);window.addEventListener('resize',resizeSky);
+$('resetStars').addEventListener('click',()=>{
+  found.clear();document.querySelectorAll('#progressdots i').forEach(i=>i.classList.remove('done'));
+  $('toGift').disabled=true;$('skyInstruction').textContent='Найди светящиеся точки — они ждут твоего нажатия.';
+  $('starMessage').textContent='«Иногда один человек просто делает мир чуточку теплее»';resizeSky();
+});
+$('toGift').addEventListener('click',()=>unlock('gift'));
+
+// 4. Падающая комета
+$('launchComet').addEventListener('click', ()=>{
+  const comet = $('comet');
+  comet.classList.remove('fly');
+  void comet.offsetWidth;
+  comet.classList.add('fly');
+  showToast('Загадай желание, пока летит звезда… ✨');
+});
+
+// Шкатулка
+const gift=$('gift'),openGift=$('openGift');
+function openTheGift(){
+  if(gift.classList.contains('open'))return;
+  gift.classList.add('open');openGift.disabled=true;
+  setTimeout(()=>$('giftReveal').classList.add('show'),500);
+  $('toFinal').disabled=false;
+  for(let i=0;i<18;i++)setTimeout(spawnParticle,i*45);
+  showToast('Для тебя кое-что тёплое ♥');
+}
+gift.addEventListener('click',openTheGift);
+gift.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();openTheGift()}});
+openGift.addEventListener('click',openTheGift);
+$('toFinal').addEventListener('click',()=>unlock('music'));
+
+// 9. Чёрно-красная роза
+const roseSvg = $('roseSvg');
+$('roseTrigger').addEventListener('click', ()=>{
+  roseSvg.classList.toggle('bloomed');
+  if(roseSvg.classList.contains('bloomed')){
+    showToast('Роза распустилась только для тебя 🌹');
+    for(let i=0;i<16;i++)setTimeout(spawnParticle,i*35);
+  }
+});
+
+// 5. Баночка с тёплыми записками
+const warmNotes = [
+  'Твоя улыбка способна осветить даже самый хмурый день.',
+  'Ты умеешь слушать и оставаться настоящей — это редкий дар.',
+  'У тебя прекрасное чувство юмора и классный музыкальный вкус!',
+  'Ты заслуживаешь самого искреннего и бережного отношения.',
+  'В тебе есть особенный свет, который сразу чувствуют люди рядом.',
+  'Не переживай по пустякам — у тебя всё обязательно получится!',
+  'Ты потрясающая даже в самые обычные, сонные дни.',
+  'Пусть сегодня произойдёт маленькое, но очень приятное чудо.'
+];
+let noteIdx = 0;
+$('drawNote').addEventListener('click', ()=>{
+  const noteEl = $('scrollNote');
+  noteEl.classList.remove('show');
+  void noteEl.offsetWidth;
+  noteIdx = (noteIdx + 1) % warmNotes.length;
+  noteEl.textContent = '«' + warmNotes[noteIdx] + '»';
+  noteEl.classList.add('show');
+  showToast('Новая мысль на сегодня ♥');
+});
+
+// 6. Виртуальное объятие
+$('hugBtn').addEventListener('click', ()=>{
+  $('hugOverlay').classList.add('active');
+  if(navigator.vibrate) navigator.vibrate([60, 50, 60]);
+  for(let i=0;i<24;i++)setTimeout(spawnParticle,i*30);
+});
+$('closeHug').addEventListener('click', ()=>$('hugOverlay').classList.remove('active'));
+
+// 10. Секретная пасхалка (5 кликов по сердечку в шапке)
+let secretClicks = 0, secretTimer = 0;
+$('secretHeart').addEventListener('click', ()=>{
+  secretClicks++;
+  clearTimeout(secretTimer);
+  secretTimer = setTimeout(()=>secretClicks = 0, 2500);
+  if(secretClicks >= 5){
+    secretClicks = 0;
+    $('secretModal').classList.add('show');
+    showToast('Секретный режим активирован! ✨');
+    for(let i=0;i<30;i++)setTimeout(spawnParticle,i*25);
+  }
+});
+$('closeSecret').addEventListener('click', ()=>$('secretModal').classList.remove('show'));
+
+// Рестарт
+$('restart').addEventListener('click',()=>{
+  found.clear();document.querySelectorAll('#progressdots i').forEach(i=>i.classList.remove('done'));
+  $('toGift').disabled=true;$('toFinal').disabled=true;gift.classList.remove('open');
+  $('giftReveal').classList.remove('show');openGift.disabled=false;notebookOpened=false;
+  notebook.classList.remove('opened');paper.classList.remove('falling');
+  envelopeCard.classList.remove('open');roseSvg.classList.remove('bloomed');
+  hint.textContent='нажми на блокнот, чтобы открыть ✦';scrollToSection('home');
+  showToast('Вернулись на главную ♥');
+});
+
+// ==============================================================
+// ТОЧНЕЙШАЯ СИНХРОНИЗАЦИЯ ПО АКУСТИЧЕСКОЙ СЕТКЕ (КИШЛАК — НАСТЯ)
+// ==============================================================
+const audio=$('songAudio'),disc=$('musicDisc'),eq=$('equalizer'),musicArt=$('musicArt');
+let lyricOffset = 0.00;
+
+function formatClock(sec){if(!Number.isFinite(sec)||sec<0)return '0:00';const m=Math.floor(sec/60),s=Math.floor(sec%60);return m+':'+String(s).padStart(2,'0');}
+function updateSongProgress(){
+  const d=audio.duration||114,t=audio.currentTime||0;
+  $('songElapsed').textContent=formatClock(t);
+  $('songDuration').textContent=formatClock(d);
+  $('songProgressFill').style.width=(d?Math.min(100,t/d*100):0)+'%';
+}
+
+const timedLyrics = [
+  {"text":"11:11, 11:11","start":9.20,"end":11.80,"words":[{"text":"11:11,","start":9.20,"end":10.40},{"text":"11:11","start":10.40,"end":11.80}]},
+  {"text":"Я пишу тебе пьяный","start":17.90,"end":19.80,"words":[{"text":"Я","start":17.90,"end":18.15},{"text":"пишу","start":18.15,"end":18.65},{"text":"тебе","start":18.65,"end":19.10},{"text":"пьяный","start":19.10,"end":19.80}]},
+  {"text":"Потерянный септум на моей ладони","start":19.80,"end":21.80,"words":[{"text":"Потерянный","start":19.80,"end":20.45},{"text":"септум","start":20.45,"end":20.90},{"text":"на","start":20.90,"end":21.05},{"text":"моей","start":21.05,"end":21.35},{"text":"ладони","start":21.35,"end":21.80}]},
+  {"text":"Разделим на секторы все наши боли","start":21.80,"end":23.80,"words":[{"text":"Разделим","start":21.80,"end":22.30},{"text":"на","start":22.30,"end":22.45},{"text":"секторы","start":22.45,"end":22.95},{"text":"все","start":22.95,"end":23.15},{"text":"наши","start":23.15,"end":23.45},{"text":"боли","start":23.45,"end":23.80}]},
+  {"text":"Развидел тебя, но разбились на доли","start":23.80,"end":25.80,"words":[{"text":"Развидел","start":23.80,"end":24.30},{"text":"тебя,","start":24.30,"end":24.70},{"text":"но","start":24.70,"end":24.85},{"text":"разбились","start":24.85,"end":25.35},{"text":"на","start":25.35,"end":25.50},{"text":"доли","start":25.50,"end":25.80}]},
+  {"text":"Твоё расстояние — до Красногорска","start":25.80,"end":27.80,"words":[{"text":"Твоё","start":25.80,"end":26.20},{"text":"расстояние","start":26.20,"end":26.85},{"text":"—","start":26.85,"end":26.95},{"text":"до","start":26.95,"end":27.10},{"text":"Красногорска","start":27.10,"end":27.80}]},
+  {"text":"Моё осознание — опухоль мозга","start":27.80,"end":29.80,"words":[{"text":"Моё","start":27.80,"end":28.20},{"text":"осознание","start":28.20,"end":28.85},{"text":"—","start":28.85,"end":28.95},{"text":"опухоль","start":28.95,"end":29.40},{"text":"мозга","start":29.40,"end":29.80}]},
+  {"text":"Мы прячемся дома, мы не любим солнце","start":29.80,"end":31.80,"words":[{"text":"Мы","start":29.80,"end":30.00},{"text":"прячемся","start":30.00,"end":30.50},{"text":"дома,","start":30.50,"end":30.85},{"text":"мы","start":30.85,"end":31.00},{"text":"не","start":31.00,"end":31.15},{"text":"любим","start":31.15,"end":31.45},{"text":"солнце","start":31.45,"end":31.80}]},
+  {"text":"Мы прячемся дома, мы не любим жить","start":31.80,"end":33.80,"words":[{"text":"Мы","start":31.80,"end":32.00},{"text":"прячемся","start":32.00,"end":32.50},{"text":"дома,","start":32.50,"end":32.85},{"text":"мы","start":32.85,"end":33.00},{"text":"не","start":33.00,"end":33.15},{"text":"любим","start":33.15,"end":33.45},{"text":"жить","start":33.45,"end":33.80}]},
+  {"text":"Я пишу тебе маслом (М)","start":33.80,"end":35.70,"words":[{"text":"Я","start":33.80,"end":34.00},{"text":"пишу","start":34.00,"end":34.40},{"text":"тебе","start":34.40,"end":34.70},{"text":"маслом","start":34.70,"end":35.20},{"text":"(М)","start":35.20,"end":35.70}]},
+  {"text":"Картина по памяти","start":35.70,"end":36.90,"words":[{"text":"Картина","start":35.70,"end":36.30},{"text":"по","start":36.30,"end":36.45},{"text":"памяти","start":36.45,"end":36.90}]},
+
+  // Скоростной куплет 1
+  {"text":"Я засыпаю когда только рядом ты","start":36.90,"end":38.90,"words":[{"text":"Я","start":36.90,"end":37.05},{"text":"засыпаю","start":37.05,"end":37.55},{"text":"когда","start":37.55,"end":37.85},{"text":"только","start":37.85,"end":38.20},{"text":"рядом","start":38.20,"end":38.55},{"text":"ты","start":38.55,"end":38.90}]},
+  {"text":"Я наливаю стакан до беспамяти","start":38.90,"end":40.90,"words":[{"text":"Я","start":38.90,"end":39.05},{"text":"наливаю","start":39.05,"end":39.60},{"text":"стакан","start":39.60,"end":40.00},{"text":"до","start":40.00,"end":40.15},{"text":"беспамяти","start":40.15,"end":40.90}]},
+  {"text":"Я нереален, но ты меня обхвати","start":40.90,"end":42.90,"words":[{"text":"Я","start":40.90,"end":41.05},{"text":"нереален,","start":41.05,"end":41.70},{"text":"но","start":41.70,"end":41.85},{"text":"ты","start":41.85,"end":42.00},{"text":"меня","start":42.00,"end":42.30},{"text":"обхвати","start":42.30,"end":42.90}]},
+  {"text":"Чувствуй со мной, когда мы с тобой взаперти","start":42.90,"end":44.90,"words":[{"text":"Чувствуй","start":42.90,"end":43.35},{"text":"со","start":43.35,"end":43.50},{"text":"мной,","start":43.50,"end":43.80},{"text":"когда","start":43.80,"end":44.10},{"text":"мы","start":44.10,"end":44.25},{"text":"с","start":44.25,"end":44.35},{"text":"тобой","start":44.35,"end":44.60},{"text":"взаперти","start":44.60,"end":44.90}]},
+  {"text":"Чую, ты пахнешь как запахи похоти","start":44.90,"end":46.50,"words":[{"text":"Чую,","start":44.90,"end":45.20},{"text":"ты","start":45.20,"end":45.35},{"text":"пахнешь","start":45.35,"end":45.70},{"text":"как","start":45.70,"end":45.85},{"text":"запахи","start":45.85,"end":46.15},{"text":"похоти","start":46.15,"end":46.50}]},
+  {"text":"Чур ты на мне, и на час слышу шорохи","start":46.50,"end":48.10,"words":[{"text":"Чур","start":46.50,"end":46.75},{"text":"ты","start":46.75,"end":46.90},{"text":"на","start":46.90,"end":47.05},{"text":"мне,","start":47.05,"end":47.25},{"text":"и","start":47.25,"end":47.35},{"text":"на","start":47.35,"end":47.50},{"text":"час","start":47.50,"end":47.70},{"text":"слышу","start":47.70,"end":47.90},{"text":"шорохи","start":47.90,"end":48.10}]},
+
+  // Скоростной куплет 2
+  {"text":"Я угораю (Хм), ты хихикаешь тоже","start":48.10,"end":50.10,"words":[{"text":"Я","start":48.10,"end":48.25},{"text":"угораю","start":48.25,"end":48.80},{"text":"(Хм),","start":48.80,"end":49.15},{"text":"ты","start":49.15,"end":49.30},{"text":"хихикаешь","start":49.30,"end":49.80},{"text":"тоже","start":49.80,"end":50.10}]},
+  {"text":"Закатан в асфальт, я татушка под кожей","start":50.10,"end":52.10,"words":[{"text":"Закатан","start":50.10,"end":50.55},{"text":"в","start":50.55,"end":50.70},{"text":"асфальт,","start":50.70,"end":51.10},{"text":"я","start":51.10,"end":51.25},{"text":"татушка","start":51.25,"end":51.65},{"text":"под","start":51.65,"end":51.80},{"text":"кожей","start":51.80,"end":52.10}]},
+  {"text":"Со мной живёт дьявол, на голове рожки","start":52.10,"end":54.10,"words":[{"text":"Со","start":52.10,"end":52.25},{"text":"мной","start":52.25,"end":52.45},{"text":"живёт","start":52.45,"end":52.85},{"text":"дьявол,","start":52.85,"end":53.25},{"text":"на","start":53.25,"end":53.40},{"text":"голове","start":53.40,"end":53.75},{"text":"рожки","start":53.75,"end":54.10}]},
+  {"text":"Твоя голограмма и я, мы похожи","start":54.10,"end":56.10,"words":[{"text":"Твоя","start":54.10,"end":54.45},{"text":"голограмма","start":54.45,"end":55.15},{"text":"и","start":55.15,"end":55.30},{"text":"я,","start":55.30,"end":55.50},{"text":"мы","start":55.50,"end":55.70},{"text":"похожи","start":55.70,"end":56.10}]},
+  {"text":"Я верю в судьбу, да храни меня Боже","start":56.10,"end":58.10,"words":[{"text":"Я","start":56.10,"end":56.25},{"text":"верю","start":56.25,"end":56.60},{"text":"в","start":56.60,"end":56.75},{"text":"судьбу,","start":56.75,"end":57.15},{"text":"да","start":57.15,"end":57.30},{"text":"храни","start":57.30,"end":57.65},{"text":"меня","start":57.65,"end":57.85},{"text":"Боже","start":57.85,"end":58.10}]},
+  {"text":"Доверие в боль и я вновь обезвожен","start":58.10,"end":60.00,"words":[{"text":"Доверие","start":58.10,"end":58.70},{"text":"в","start":58.70,"end":58.85},{"text":"боль","start":58.85,"end":59.05},{"text":"и","start":59.05,"end":59.20},{"text":"я","start":59.20,"end":59.35},{"text":"вновь","start":59.35,"end":59.60},{"text":"обезвожен","start":59.60,"end":60.00}]},
+  {"text":"Я вижу любовь, и ты чувствуешь тоже (М-м)","start":60.00,"end":63.00,"words":[{"text":"Я","start":60.00,"end":60.20},{"text":"вижу","start":60.20,"end":60.55},{"text":"любовь,","start":60.55,"end":60.95},{"text":"и","start":60.95,"end":61.10},{"text":"ты","start":61.10,"end":61.25},{"text":"чувствуешь","start":61.25,"end":61.75},{"text":"тоже","start":61.75,"end":62.15},{"text":"(М-м)","start":62.15,"end":63.00}]},
+
+  // Мостик
+  {"text":"Ты сига, я жига","start":64.70,"end":66.20,"words":[{"text":"Ты","start":64.70,"end":64.95},{"text":"сига,","start":64.95,"end":65.45},{"text":"я","start":65.45,"end":65.70},{"text":"жига","start":65.70,"end":66.20}]},
+  {"text":"Я поджигаю тебя и ты тлеешь на мне","start":66.20,"end":68.20,"words":[{"text":"Я","start":66.20,"end":66.40},{"text":"поджигаю","start":66.40,"end":67.05},{"text":"тебя","start":67.05,"end":67.35},{"text":"и","start":67.35,"end":67.50},{"text":"ты","start":67.50,"end":67.65},{"text":"тлеешь","start":67.65,"end":67.95},{"text":"на","start":67.95,"end":68.08},{"text":"мне","start":68.08,"end":68.20}]},
+  {"text":"Будто это финал из какого-то фильма","start":68.20,"end":70.20,"words":[{"text":"Будто","start":68.20,"end":68.55},{"text":"это","start":68.55,"end":68.90},{"text":"финал","start":68.90,"end":69.30},{"text":"из","start":69.30,"end":69.50},{"text":"какого-то","start":69.50,"end":69.85},{"text":"фильма","start":69.85,"end":70.20}]},
+  {"text":"Но мы не актёры, немое кино","start":70.20,"end":72.10,"words":[{"text":"Но","start":70.20,"end":70.40},{"text":"мы","start":70.40,"end":70.60},{"text":"не","start":70.60,"end":70.80},{"text":"актёры,","start":70.80,"end":71.25},{"text":"немое","start":71.25,"end":71.65},{"text":"кино","start":71.65,"end":72.10}]},
+  {"text":"Да я снова упал, и мы канем на дно","start":72.10,"end":74.10,"words":[{"text":"Да","start":72.10,"end":72.30},{"text":"я","start":72.30,"end":72.50},{"text":"снова","start":72.50,"end":72.90},{"text":"упал,","start":72.90,"end":73.30},{"text":"и","start":73.30,"end":73.45},{"text":"мы","start":73.45,"end":73.60},{"text":"канем","start":73.60,"end":73.85},{"text":"на","start":73.85,"end":73.95},{"text":"дно","start":73.95,"end":74.10}]},
+  {"text":"И я будто бы камень — влетаю в ебло","start":74.10,"end":76.20,"words":[{"text":"И","start":74.10,"end":74.30},{"text":"я","start":74.30,"end":74.50},{"text":"будто","start":74.50,"end":74.80},{"text":"бы","start":74.80,"end":75.00},{"text":"камень","start":75.00,"end":75.40},{"text":"—","start":75.40,"end":75.50},{"text":"влетаю","start":75.50,"end":75.85},{"text":"в","start":75.85,"end":75.95},{"text":"ебло","start":75.95,"end":76.20}]},
+  {"text":"Мы вообще ненормальные, но заодно","start":76.20,"end":78.20,"words":[{"text":"Мы","start":76.20,"end":76.40},{"text":"вообще","start":76.40,"end":76.85},{"text":"ненормальные,","start":76.85,"end":77.50},{"text":"но","start":77.50,"end":77.70},{"text":"заодно","start":77.70,"end":78.20}]},
+
+  // Припевы
+  {"text":"По форме бокала я выльюсь","start":78.20,"end":80.20,"words":[{"text":"По","start":78.20,"end":78.50},{"text":"форме","start":78.50,"end":79.00},{"text":"бокала","start":79.00,"end":79.50},{"text":"я","start":79.50,"end":79.70},{"text":"выльюсь","start":79.70,"end":80.20}]},
+  {"text":"И вырежу на кисти своей твоё не до эго","start":80.20,"end":82.00,"words":[{"text":"И","start":80.20,"end":80.40},{"text":"вырежу","start":80.40,"end":80.80},{"text":"на","start":80.80,"end":81.00},{"text":"кисти","start":81.00,"end":81.30},{"text":"своей","start":81.30,"end":81.55},{"text":"твоё","start":81.55,"end":81.75},{"text":"не","start":81.75,"end":81.85},{"text":"до","start":81.85,"end":81.92},{"text":"эго","start":81.92,"end":82.00}]},
+  {"text":"Мы будем с тобою одни в этом мире","start":82.00,"end":83.90,"words":[{"text":"Мы","start":82.00,"end":82.25},{"text":"будем","start":82.25,"end":82.60},{"text":"с","start":82.60,"end":82.75},{"text":"тобою","start":82.75,"end":83.10},{"text":"одни","start":83.10,"end":83.40},{"text":"в","start":83.40,"end":83.50},{"text":"этом","start":83.50,"end":83.70},{"text":"мире","start":83.70,"end":83.90}]},
+  {"text":"Чёлка на глазах — эмо","start":83.90,"end":85.40,"words":[{"text":"Чёлка","start":83.90,"end":84.30},{"text":"на","start":84.30,"end":84.50},{"text":"глазах","start":84.50,"end":84.90},{"text":"—","start":84.90,"end":85.00},{"text":"эмо","start":85.00,"end":85.40}]},
+
+  {"text":"По форме бокала я выльюсь","start":85.40,"end":87.40,"words":[{"text":"По","start":85.40,"end":85.70},{"text":"форме","start":85.70,"end":86.20},{"text":"бокала","start":86.20,"end":86.70},{"text":"я","start":86.70,"end":86.90},{"text":"выльюсь","start":86.90,"end":87.40}]},
+  {"text":"И вырежу на кисти своей твоё не до эго","start":87.40,"end":89.30,"words":[{"text":"И","start":87.40,"end":87.60},{"text":"вырежу","start":87.60,"end":88.00},{"text":"на","start":88.00,"end":88.20},{"text":"кисти","start":88.20,"end":88.50},{"text":"своей","start":88.50,"end":88.80},{"text":"твоё","start":88.80,"end":89.00},{"text":"не","start":89.00,"end":89.10},{"text":"до","start":89.10,"end":89.18},{"text":"эго","start":89.18,"end":89.30}]},
+  {"text":"Мы будем с тобою одни в этом мире","start":89.30,"end":91.20,"words":[{"text":"Мы","start":89.30,"end":89.55},{"text":"будем","start":89.55,"end":89.90},{"text":"с","start":89.90,"end":90.05},{"text":"тобою","start":90.05,"end":90.40},{"text":"одни","start":90.40,"end":90.70},{"text":"в","start":90.70,"end":90.80},{"text":"этом","start":90.80,"end":91.00},{"text":"мире","start":91.00,"end":91.20}]},
+  {"text":"Чёлка на глазах — эмо","start":91.20,"end":92.70,"words":[{"text":"Чёлка","start":91.20,"end":91.60},{"text":"на","start":91.60,"end":91.80},{"text":"глазах","start":91.80,"end":92.20},{"text":"—","start":92.20,"end":92.30},{"text":"эмо","start":92.30,"end":92.70}]},
+
+  {"text":"По форме бокала я выльюсь","start":92.70,"end":94.70,"words":[{"text":"По","start":92.70,"end":93.00},{"text":"форме","start":93.00,"end":93.50},{"text":"бокала","start":93.50,"end":94.00},{"text":"я","start":94.00,"end":94.20},{"text":"выльюсь","start":94.20,"end":94.70}]},
+  {"text":"И вырежу на кисти своей твоё не до эго","start":94.70,"end":96.60,"words":[{"text":"И","start":94.70,"end":94.90},{"text":"вырежу","start":94.90,"end":95.30},{"text":"на","start":95.30,"end":95.50},{"text":"кисти","start":95.50,"end":95.80},{"text":"своей","start":95.80,"end":96.10},{"text":"твоё","start":96.10,"end":96.30},{"text":"не","start":96.30,"end":96.40},{"text":"до","start":96.40,"end":96.48},{"text":"эго","start":96.48,"end":96.60}]},
+  {"text":"Мы будем с тобою одни в этом мире","start":96.60,"end":98.60,"words":[{"text":"Мы","start":96.60,"end":96.85},{"text":"будем","start":96.85,"end":97.20},{"text":"с","start":97.20,"end":97.35},{"text":"тобою","start":97.35,"end":97.75},{"text":"одни","start":97.75,"end":98.05},{"text":"в","start":98.05,"end":98.15},{"text":"этом","start":98.15,"end":98.35},{"text":"мире","start":98.35,"end":98.60}]},
+  {"text":"Чёлка на глазах — эмо","start":98.60,"end":100.20,"words":[{"text":"Чёлка","start":98.60,"end":99.00},{"text":"на","start":99.00,"end":99.20},{"text":"глазах","start":99.20,"end":99.60},{"text":"—","start":99.60,"end":99.70},{"text":"эмо","start":99.70,"end":100.20}]},
+
+  // Финальный припев
+  {"text":"По форме бокала я выльюсь","start":100.20,"end":102.50,"words":[{"text":"По","start":100.20,"end":100.60},{"text":"форме","start":100.60,"end":101.20},{"text":"бокала","start":101.20,"end":101.80},{"text":"я","start":101.80,"end":102.00},{"text":"выльюсь","start":102.00,"end":102.50}]},
+  {"text":"И вырежу на кисти своей твоё не до эго","start":102.50,"end":104.70,"words":[{"text":"И","start":102.50,"end":102.70},{"text":"вырежу","start":102.70,"end":103.20},{"text":"на","start":103.20,"end":103.50},{"text":"кисти","start":103.50,"end":103.90},{"text":"своей","start":103.90,"end":104.20},{"text":"твоё","start":104.20,"end":104.40},{"text":"не","start":104.40,"end":104.50},{"text":"до","start":104.50,"end":104.60},{"text":"эго","start":104.60,"end":104.70}]},
+  {"text":"Мы будем с тобою одни в этом мире","start":104.70,"end":107.10,"words":[{"text":"Мы","start":104.70,"end":105.00},{"text":"будем","start":105.00,"end":105.50},{"text":"с","start":105.50,"end":105.70},{"text":"тобою","start":105.70,"end":106.20},{"text":"одни","start":106.20,"end":106.60},{"text":"в","start":106.60,"end":106.70},{"text":"этом","start":106.70,"end":106.90},{"text":"мире","start":106.90,"end":107.10}]},
+  {"text":"Чёлка на глазах — эмо","start":107.10,"end":110.50,"words":[{"text":"Чёлка","start":107.10,"end":107.70},{"text":"на","start":107.70,"end":108.00},{"text":"глазах","start":108.00,"end":108.80},{"text":"—","start":108.80,"end":109.00},{"text":"эмо","start":109.00,"end":110.50}]}
+];
+
+let lastLyricIndex = -2, lastWordIndex = -2, rafId = 0;
+
+function findLyricIndex(time){
+  if(time < timedLyrics[0].start) return -1;
+  if(time >= 11.80 && time < 17.80) return -10; 
+  if(time >= 63.00 && time < 64.60) return -11; 
+  
+  for(let i=0; i<timedLyrics.length; i++){
+    if(time >= timedLyrics[i].start && time <= timedLyrics[i].end) return i;
+    if(i < timedLyrics.length-1 && time > timedLyrics[i].end && time < timedLyrics[i+1].start){
+      return i;
+    }
+  }
+  return timedLyrics.length - 1;
+}
+
+function findWordIndex(line, time){
+  const ws = line.words;
+  if(time < ws[0].start) return -1;
+  if(time >= ws[ws.length - 1].end) return ws.length; 
+  for(let i=0; i<ws.length; i++){
+    if(time >= ws[i].start && time < ws[i].end) return i;
+    if(i < ws.length-1 && time >= ws[i].end && time < ws[i+1].start){
+      return i;
+    }
+  }
+  return ws.length - 1;
+}
+
+function updateMusicState(){
+  updateSongProgress();
+  const playing = !audio.paused && !audio.ended;
+  disc.classList.toggle('playing', playing);
+  eq.classList.toggle('playing', playing);
+  musicArt.classList.toggle('playing', playing);
+  $('karaokePlay').textContent = playing ? '⏸ Пауза' : '▶ Включить песню';
+  if(playing && !rafId) rafId = requestAnimationFrame(syncFrame);
+  if(!playing && rafId){ cancelAnimationFrame(rafId); rafId = 0; }
+}
+
+function renderLyric(){
+  const t = Math.max(0, (audio.currentTime || 0) + lyricOffset);
+  const index = findLyricIndex(t);
+
+  // Вступление
+  if(index === -1){
+    if(lastLyricIndex !== -1){
+      lastLyricIndex = -1;
+      lastWordIndex = -1;
+      $('lyricPrev').textContent = '♫';
+      $('lyricCurrent').innerHTML = '<span class="lyric-word active">♫ [Интро]</span>';
+      $('lyricNext').textContent = timedLyrics[0].text;
+      $('syncStatus').textContent = 'вступление · скоро начнётся трек';
+    }
+    return;
+  }
+
+  // Паузы
+  if(index === -10){
+    if(lastLyricIndex !== -10){
+      lastLyricIndex = -10;
+      lastWordIndex = -1;
+      $('lyricPrev').textContent = '11:11, 11:11';
+      $('lyricCurrent').innerHTML = '<span class="lyric-word active">♫ [Проигрыш] ♫</span>';
+      $('lyricNext').textContent = 'Я пишу тебе пьяный';
+      $('syncStatus').textContent = 'проигрыш';
+    }
+    return;
+  }
+
+  if(index === -11){
+    if(lastLyricIndex !== -11){
+      lastLyricIndex = -11;
+      lastWordIndex = -1;
+      $('lyricPrev').textContent = 'Я вижу любовь…';
+      $('lyricCurrent').innerHTML = '<span class="lyric-word active">♫ [Бит] ♫</span>';
+      $('lyricNext').textContent = 'Ты сига, я жига';
+      $('syncStatus').textContent = 'проигрыш';
+    }
+    return;
+  }
+
+  // Финал
+  if(t > timedLyrics[timedLyrics.length-1].end){
+    if(lastLyricIndex !== 999){
+      lastLyricIndex = 999;
+      lastWordIndex = -1;
+      $('lyricPrev').textContent = timedLyrics[timedLyrics.length-1].text;
+      $('lyricCurrent').innerHTML = '<span class="lyric-word active">♥ Финал трека ♫</span>';
+      $('lyricNext').textContent = 'Кишлак — «Настя»';
+      $('syncStatus').textContent = 'трек завершается';
+    }
+    return;
+  }
+
+  const item = timedLyrics[index];
+
+  // Смена строки
+  if(index !== lastLyricIndex){
+    $('lyricCurrent').classList.remove('changing');
+    void $('lyricCurrent').offsetWidth;
+    $('lyricCurrent').classList.add('changing');
+    lastLyricIndex = index;
+    lastWordIndex = -2;
+    $('lyricCurrent').innerHTML = item.words.map((w,i)=>`<span class="lyric-word" data-word="${i}" data-time="${w.start}">${escapeLyric(w.text)}</span>`).join(' ');
+  }
+
+  // Смена активного слова
+  const wordIndex = findWordIndex(item, t);
+  if(wordIndex !== lastWordIndex){
+    const spans = $('lyricCurrent').querySelectorAll('.lyric-word');
+    spans.forEach((s,i)=>{
+      s.classList.toggle('done', i < wordIndex);
+      s.classList.toggle('active', i === wordIndex);
+    });
+    lastWordIndex = wordIndex;
+    $('syncStatus').textContent = `строка ${index+1}/${timedLyrics.length} · слово ${Math.min(item.words.length, Math.max(1, wordIndex+1))}/${item.words.length}`;
+  }
+
+  $('lyricPrev').textContent = timedLyrics[index-1]?.text || '♫ [Интро]';
+  $('lyricNext').textContent = timedLyrics[index+1]?.text || '♥ Финал';
+}
+
+function escapeLyric(s){return s.replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+function syncFrame(){rafId=0;if(audio.paused||audio.ended)return;renderLyric();rafId=requestAnimationFrame(syncFrame);}
+
+// Перемотка по клику на строчку или слово
+$('lyricPrev').addEventListener('click', ()=>{
+  if(lastLyricIndex > 0) {
+    audio.currentTime = timedLyrics[lastLyricIndex - 1].start;
+    audio.play();
+  }
+});
+$('lyricNext').addEventListener('click', ()=>{
+  if(lastLyricIndex >= 0 && lastLyricIndex < timedLyrics.length - 1) {
+    audio.currentTime = timedLyrics[lastLyricIndex + 1].start;
+    audio.play();
+  }
+});
+$('lyricCurrent').addEventListener('click', (e)=>{
+  const w = e.target.closest('.lyric-word');
+  if(w && w.dataset.time) {
+    audio.currentTime = parseFloat(w.dataset.time);
+    audio.play();
+  }
+});
+$('progressTrack').addEventListener('click', (e)=>{
+  const rect = $('progressTrack').getBoundingClientRect();
+  const pos = (e.clientX - rect.left) / rect.width;
+  if(audio.duration) {
+    audio.currentTime = pos * audio.duration;
+  }
+});
+
+audio.addEventListener('play',()=>{lastLyricIndex=-2;lastWordIndex=-2;updateMusicState();renderLyric();});
+audio.addEventListener('pause',updateMusicState);
+audio.addEventListener('ended',()=>{updateMusicState();renderLyric();});
+audio.addEventListener('timeupdate',()=>{updateSongProgress();renderLyric();});
+audio.addEventListener('loadedmetadata',()=>{updateSongProgress();renderLyric();});
+audio.addEventListener('seeked',()=>{lastLyricIndex=-2;lastWordIndex=-2;updateSongProgress();renderLyric();});
+audio.addEventListener('error',()=>{
+  $('syncStatus').textContent='ошибка загрузки song.mp3';
+  showToast('Помести song.mp3 в одну папку с html-файлом');
+});
+
+$('karaokePlay').addEventListener('click',()=>{
+  if(audio.paused){
+    audio.play().then(()=>{updateMusicState();renderLyric();}).catch(()=>showToast('Нажми Play на самом плеере ♥'));
+  } else {
+    audio.pause();
+  }
+});
+
+$('karaokeRestart').addEventListener('click',()=>{
+  try{audio.currentTime=0;}catch(e){};
+  audio.play().then(()=>{updateMusicState();renderLyric();}).catch(()=>{renderLyric();showToast('Нажми Play на плеере ♫');});
+});
+
+// Кнопки микрокалибровки
+$('offsetMinus').addEventListener('click', ()=>{
+  lyricOffset += 0.05;
+  $('offsetStatus').textContent = `Калибровка: +${lyricOffset.toFixed(2)}с (быстрее на 50мс)`;
+  showToast(`Слова зажигаются быстрее (+${lyricOffset.toFixed(2)}с)`);
+  renderLyric();
+});
+
+$('offsetPlus').addEventListener('click', ()=>{
+  lyricOffset -= 0.05;
+  $('offsetStatus').textContent = `Калибровка: ${lyricOffset.toFixed(2)}с`;
+  showToast(`Слова сдвинуты позже (${lyricOffset.toFixed(2)}с)`);
+  renderLyric();
+});
+
+$('offsetReset').addEventListener('click', ()=>{
+  lyricOffset = 0.00;
+  $('offsetStatus').textContent = 'Калибровка: 0.00с (чистый ритм слово в слово)';
+  showToast('Сброшено на идеальное значение (0.00с)');
+  renderLyric();
+});
+
+renderLyric();
+updateSongProgress();
+setTimeout(resizeSky,350);
+})();
+</script>
+</body>
+</html>
